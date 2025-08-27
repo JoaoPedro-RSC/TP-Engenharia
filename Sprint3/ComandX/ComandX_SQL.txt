@@ -1,0 +1,71 @@
+--
+-- Tabela de Usuários
+-- Armazena os usuários do sistema, como garçons e gerentes.
+--
+CREATE TABLE Usuarios (
+    id INT PRIMARY KEY,
+    login VARCHAR(50) UNIQUE NOT NULL,
+    nome VARCHAR(100) NOT NULL
+);
+
+--
+-- Tabela de Mesas
+-- Gerencia as mesas do salão, com um status para indicar se estão livres ou ocupadas.
+-- O status é um número inteiro, seguindo a enumeração 'Mesa::Status' do código (0 para 'Livre' e 1 para 'Ocupada').
+--
+CREATE TABLE Mesas (
+    id INT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    status INT NOT NULL
+);
+
+-- Inserção de dados iniciais para a tabela Mesas, baseada na inicialização do GestaoSalaoServiceImpl.cpp
+INSERT INTO Mesas (id, nome, status) VALUES
+(1, 'Mesa 01', 0),
+(2, 'Mesa 02', 0),
+(3, 'Mesa 03', 0),
+(4, 'Mesa 04', 0),
+(5, 'Mesa 05', 0),
+(6, 'Mesa 06', 0),
+(7, 'Mesa 07', 0),
+(8, 'Mesa 08', 0),
+(9, 'Mesa 09', 0),
+(10, 'Mesa 10', 0);
+
+--
+-- Tabela de Itens do Cardápio
+-- Contém os itens que podem ser pedidos, como pratos e bebidas.
+--
+CREATE TABLE ItensCardapio (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco REAL NOT NULL
+);
+
+--
+-- Tabela de Comandas
+-- Armazena as comandas, associando-as a uma mesa.
+--
+CREATE TABLE Comandas (
+    id INT PRIMARY KEY,
+    idMesa INT NOT NULL,
+    abertura TIMESTAMP NOT NULL,
+    ativa BOOLEAN NOT NULL,
+    FOREIGN KEY (idMesa) REFERENCES Mesas(id)
+);
+
+--
+-- Tabela de Itens da Comanda
+-- Detalha os itens de cada comanda, incluindo a quantidade e observações.
+--
+CREATE TABLE ItensComanda (
+    id INT PRIMARY KEY,
+    idComanda INT NOT NULL,
+    idItemCardapio INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    quantidade INT NOT NULL,
+    precoUnitario REAL NOT NULL,
+    observacoes VARCHAR(255),
+    FOREIGN KEY (idComanda) REFERENCES Comandas(id),
+    FOREIGN KEY (idItemCardapio) REFERENCES ItensCardapio(id)
+);
